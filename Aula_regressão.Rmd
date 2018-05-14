@@ -1,0 +1,122 @@
+---
+title: "Regressão linear"
+author: "Igor Luís e Victor Lincoln"
+date: "May 10, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 1. Regressão linear
+
+A regressão linear é um método estatístico utilizado para verificar se alguma variável da amostra**(independente)** influencia outra variável**(dependente)**, e, em qual direção, positiva ou negativa, que é observado pelo $\beta$ da regressão, que é o que iremos calcular.
+
+### 1.1 Fórmula da regressão linear:
+
+$$Y = \alpha + \beta*X +  \epsilon$$
+Aplicando no R, usaremos a base de dados mtcars, que já vem na própria linguagem.
+Queremos observar se, a variável hp(independente), têm alguma influência na mpg(dependente):
+
+$$mpg = \alpha + \beta*hp + \mu $$
+
+
+Para fazer a regressão no R, usaremos o seguinte comando:
+```
+lm(formula, data, subset)
+```
+ * Significado de cada argumento da função lm:
+    + função lm: significa *linear model*, ou seja, o modelo que queremos utilizar;
+    + formula: Fórmula que será utilizada para a regressão;
+    + data: base de dados que iremos utilizar no modelo;
+    + subset: sub-amostra da base de dados que iremos utilizar;
+
+Como queremos explicar mpg através de hp, a fórmula será o seguinte:
+```{r mtcars}
+reg1 <- lm(mpg ~ hp, data = mtcars)
+reg1
+```
+
+Observando o coeficiente da regressão, pode mos ver que o coeficiente da variável independente é negativo com relação à dependente.
+
+Utilizando a função summary() que serve para dar um sumário do objeto que colocaremos como input na função.
+
+```{r }
+summary(reg1)
+```
+
+
+Obseravndo o sumário da regressão, podemos observar que, há uma forte significância da variável horse power sobre a mpg, e, observando a primeira coluna, podemos ver que o beta é negativo, ou seja dá pra concluir que, para a amostra, quanto mais força do motor, menos milhas por galão são feitas.
+
+# 2. Gráficos
+## 2.1 Gráfico de dispersão
+
+Queremos observar pontualmente como as variáveis escolhidas se comportam.
+
+Iremos utilizar o pacote ggplot2, para relembrar, deve-se instalar o mesmo através do comando **install.packages()** e logo então carregá-lo através do comando **library()**:
+
+```
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+
+Tendo carregado os pré-requisitos, podemos fazer o gráfico de dispersão das variáveis, ou seja, observar se há lineariedade ou não nas variáveis através dos seguintes comandos:
+
+```
+ggplot(data = mtcars) + geom_point(mapping = aes(x = hp, y = mpg))
+```
+ * Significado das funções e de cada argumento:
+  + ggplot(): serve para selecionar o objeto que contém o os objetos a serem plotados;
+    + data: argumento para selecionar a base de dados do objeto a ser plotado;
+  + geom_point(): função que determina a geometria do gráfico, no caso, de dispersão;
+    + mapping: argumento para determinar os objetos a serem rastreados;
+      + aes(): função para determinar as variáveis do dataframe;
+
+
+
+```{r pressure, echo=TRUE}
+library(ggplot2)
+ggplot(data = mtcars) + geom_point(mapping = aes(x = hp, y = mpg))
+```
+
+Podemos visualizar que, a dispersão entre essas duas variáveis é praticamente linear, o que podemos confirmar pela regressão.
+
+## 2.2 Observando a reta da regressão
+
+Após a visualização de forma pontual, queremos observar a reta da regressão entre as duas variáveis, para ver se, de fato a regressão se confirma, e, queremos observar também determinado nível de significância, para mais, ou para menos. Utilizaremos o seguinte comando:
+
+```
+ggplot(data = mtcars) + geom_smooth(mapping = aes(x = hp, y = mpg), method = "lm")
+```
+
+O que difere do comando anterior, é que, como queremos uma linha reta teremos que utilizar a função ```geom_smooth()``` que serve para visualizar uma reta, diferentemente do anterior, utilizaremos um método para isso, o linear model. Para ver como a reta se comporta com a regressão. 
+
+```{r, echo=TRUE}
+
+ggplot(data = mtcars) +geom_smooth(mapping = aes(x = hp, y = mpg), method = "lm")
+```
+Mais uma vez, podemos confirmar a relação negativa entre as duas variáveis
+## Plotando os gráficos em apenas um só
+
+Agora, se quisermos unir os dois gráficos, basta colocarmos um ```+``` entre os dois códigos ou seja, queremos unir o gráfico de dispersão, com o gráfico da reta da regressão. Basta utilizar os mesmos códigos, apenas somando-os:
+```
+ggplot(data = mtcars) + geom_point(mapping = aes(x = hp, y = mpg))+
+  geom_smooth(mapping = aes(x = hp, y = mpg), method = "lm")
+
+```
+Visualizando:
+
+```{r, echo = TRUE}
+ggplot(data = mtcars) + geom_point(mapping = aes(x = hp, y = mpg))+
+  geom_smooth(mapping = aes(x = hp, y = mpg), method = "lm")
+```
+
+
+
+
+
+
